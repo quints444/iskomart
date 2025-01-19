@@ -20,8 +20,3 @@ export default function App() {
     </NavigationContainer>
   );
 }
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 6e8e4a0567a142d4d01d0f7ad117f5494062cf0e
