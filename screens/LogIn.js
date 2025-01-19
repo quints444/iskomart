@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     width: 319,
     height: 280,
     position: 'absolute',
-    top: 189, 
+    top: 100, 
   },
   loginContainer: {
     width: '100%',
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 10,
     marginBottom: 15,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'black',
   },
   signInButton: {

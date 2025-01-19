@@ -60,11 +60,11 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 75,
     alignItems: 'center',
     paddingBottom: 60,
-    paddingTop: 40,
+    paddingTop: 20,
     minHeight: 500, 
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 20,
@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
   input: {
     width: '90%',
     height: 40,
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: 'black',
     borderRadius: 10,
     backgroundColor: 'white',
