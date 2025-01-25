@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Home = () => {
+const Home = ({navigation}) => {
   const categories = ["Foods", "School Supplies", "Gadgets", "Others"];
 
   const posts = [
@@ -119,7 +119,7 @@ const Home = () => {
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity onPress={() => { /* Home button action */ }}>
+        <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Icon name="home-outline" size={25} color="#000" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => { /* Search button action */ }}>
@@ -131,7 +131,7 @@ const Home = () => {
         <TouchableOpacity onPress={() => { /* Message button action */ }}>
           <Icon name="mail-outline" size={25} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { /* Profile button action */ }}>
+        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Icon name="person-outline" size={25} color="#000" />
         </TouchableOpacity>
       </View>
@@ -193,7 +193,6 @@ const styles = StyleSheet.create({
     paddingTop: 3,    
     paddingLeft: '5',
     textAlign: 'center',
-
   },
   postsList: {
     flex: 1,
