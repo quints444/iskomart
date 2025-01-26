@@ -122,10 +122,10 @@ const Home = ({navigation}) => {
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Icon name="home-outline" size={25} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { /* Search button action */ }}>
+        <TouchableOpacity onPress={() => navigation.navigate('Search')}>
           <Icon name="search-outline" size={25} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { /* Add button action */ }}>
+        <TouchableOpacity onPress={() => navigation.navigate('AddPost')}>
           <Icon name="add-circle-outline" size={25} color="#000" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => { /* Message button action */ }}>

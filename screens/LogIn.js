@@ -2,8 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; // Add this import
 
-const LogIn = () => {
-  const navigation = useNavigation(); // Use the hook here
+const LogIn = ({navigation}) => {
 
   return (
     <View style={styles.container}>
@@ -12,20 +11,20 @@ const LogIn = () => {
 
       {/*pink background*/}
       <View style={styles.loginContainer}>
-        <Text style={styles.title}>Sign in</Text>
+      <Text style={styles.title}>Sign in</Text>
 
-        {/* Username Input */}
-        <Text style={styles.label}>Username</Text>
-        <TextInput style={styles.input} placeholder="Enter your username" />
+      {/* Username Input */}
+      <Text style={styles.label}>Username</Text>
+      <TextInput style={styles.input} placeholder="Enter your username" />
 
-        {/* Password Input */}
-        <Text style={styles.label}>Password</Text>
-        <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry />
+      {/* Password Input */}
+      <Text style={styles.label}>Password</Text>
+      <TextInput style={styles.input} placeholder="Enter your password" secureTextEntry />
 
-        {/* Sign In Button */}
-        <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('Home')}>
-          <Text style={styles.signInButtonText}>Sign in</Text>
-        </TouchableOpacity>
+      {/* Sign In Button */}
+      <TouchableOpacity style={styles.signInButton} onPress={() => navigation.navigate('Home')}>
+        <Text style={styles.signInButtonText}>Sign in</Text>
+      </TouchableOpacity>
       </View>
     </View>
   );
