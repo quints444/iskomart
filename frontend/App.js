@@ -8,6 +8,7 @@ import Home from './screens/Home'; // Import HomePage
 import Search from './screens/Search'; //Import SearchPage
 import AddPost from './screens/AddPost'; //Import AddPost
 import Profile from './screens/Profile'; //Import ProfilePage
+import Messaging from './screens/Messaging';
 import EditProfile from './screens/EditProfile';
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +24,7 @@ export default function App() {
         <Stack.Screen name="Search" component={Search} options={{ headerShown: false }} /> 
         <Stack.Screen name ="AddPost" component={AddPost}options={{headerShown: false}}/>
         <Stack.Screen name="Profile" component={Profile} options={{ headerShown: false }}/> 
+        <Stack.Screen name="Messaging" component={Messaging} options={{ headerShown: false }}/> 
         <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }}/> 
       </Stack.Navigator>
     </NavigationContainer>

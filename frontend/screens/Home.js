@@ -156,7 +156,7 @@ const Home = ({ route, navigation }) => {
         <TouchableOpacity onPress={() => navigation.navigate('AddPost')}>
           <Icon name="add-circle-outline" size={25} color="#000" />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => { /* Message button action */ }}>
+        <TouchableOpacity onPress={() => navigation.navigate('Messaging')}>
           <Icon name="mail-outline" size={25} color="#000" />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
