@@ -15,7 +15,9 @@ const Messaging = ({ navigation }) => {
   ];
 
   const renderMessage = ({ item }) => (
-    <TouchableOpacity style={styles.messageContainer} onPress={() => { /* Navigate to individual chat */ }}>
+    <TouchableOpacity 
+    style={styles.messageContainer} 
+    onPress={() => navigation.navigate('ChatPage', { userName: item.user, avatar: item.avatar })}>
       <Image source={{ uri: item.avatar }} style={styles.avatar} />
       <View style={styles.messageInfo}>
         <Text style={styles.userName}>{item.user}</Text>
