@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, FlatList, Modal } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, ScrollView, Modal, FlatList, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import * as ImagePicker from 'expo-image-picker';
 
 const AddPost = ({ navigation }) => {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [imageUris, setImageUris] = useState([]);
 
   const categories = [
     { id: '1', label: 'Foods' },
@@ -17,66 +19,93 @@ const AddPost = ({ navigation }) => {
 
   const handleCategorySelect = (category) => {
     setCategory(category);
-    setIsModalVisible(false); 
+    setIsModalVisible(false);
   };
 
-  const handleAddPhoto = () => {
-    console.log("Add photo button pressed");
-    // Logic for handling photo selection
+  const handleAddPhoto = async () => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert('Permission to access media library is required!');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      setImageUris((prevUris) => [...prevUris, result.uri]);
+    }
+  };
+
+  const handlePublish = () => {
+    if (!price || !description || !category) {
+      Alert.alert('Validation Error', 'Please fill in all required fields: Price, Description, and Category.');
+      return;
+    }
+
+    const newPost = {
+      id: Math.random().toString(),
+      user: 'Your Name',
+      date: new Date().toLocaleDateString(),
+      price: `₱${price}`, // Include the peso sign when saving the price
+      title: description,
+      image: imageUris[0], // This is where we use the first image from the array
+      likes: 0,
+      messages: 0,
+    };
+
+    navigation.navigate('Home', { newPost });
   };
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <Image source={require('../assets/logo.png')} style={{ width: 50, height: 50 }} />
       </View>
 
-      {/* Cancel and Publish Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Cancel pressed");
-            navigation.goBack();
-          }}
-          style={styles.cancelButton}
-        >
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.cancelButton}>
           <Text style={styles.CancelbuttonText}>Cancel</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          onPress={() => {
-            console.log("Publish pressed");
-            // Add logic to handle post publishing
-          }}
-          style={styles.publishButton}
-        >
+        <TouchableOpacity onPress={handlePublish} style={styles.publishButton}>
           <Text style={styles.PublishbuttonText}>Publish</Text>
         </TouchableOpacity>
       </View>
 
-      {/* Scrollable Content */}
       <View style={styles.scrollContainer}>
-
-        {/* Add post image */}
         <View style={styles.addImageContainer}>
           <TouchableOpacity onPress={handleAddPhoto} style={styles.addImageButton}>
-          <Image source={require('../assets/gadgetbutton/addphoto.png')} style={styles.addImageIcon} />
-
+            <Image source={require('../assets/gadgetbutton/addphoto.png')} style={styles.addImageIcon} />
           </TouchableOpacity>
           <Text style={styles.addImageText}>Add Photo</Text>
         </View>
 
-        {/* Price Input */}
+        {/* Display the image preview */}
+        {imageUris.length > 0 && (
+          <ScrollView horizontal style={styles.imagePreviewContainer}>
+            {imageUris.map((uri, index) => (
+              <Image key={index} source={{ uri }} style={styles.selectedImage} />
+            ))}
+          </ScrollView>
+        )}
+
         <Text style={styles.label}>Price</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter price"
-          value={price}
-          onChangeText={setPrice}
+          value={price ? `₱${price}` : ''}
+          onChangeText={(text) => {
+            const numericText = text.replace(/[^0-9]/g, '');
+            setPrice(numericText);
+          }}
+          keyboardType="numeric"
         />
 
-        {/* Description Input */}
         <Text style={styles.label}>Description</Text>
         <TextInput
           style={[styles.input, styles.textArea]}
@@ -87,13 +116,11 @@ const AddPost = ({ navigation }) => {
           onChangeText={setDescription}
         />
 
-        {/* Category Dropdown */}
         <Text style={styles.label}>Listing Options</Text>
         <TouchableOpacity onPress={() => setIsModalVisible(true)} style={styles.dropdown}>
           <Text style={styles.dropdownText}>{category ? category : 'Select Category'}</Text>
         </TouchableOpacity>
 
-        {/* Category Modal (FlatList for options) */}
         <Modal
           transparent={true}
           visible={isModalVisible}
@@ -116,7 +143,6 @@ const AddPost = ({ navigation }) => {
         </Modal>
       </View>
 
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity onPress={() => navigation.navigate('Home')}>
           <Icon name="home-outline" size={25} color="#000" />
@@ -193,8 +219,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     borderWidth: 1,
     borderColor: '#000',
-    borderWidth: 2,
-    borderColor: '#000',
   },
   textArea: {
     height: 100,
@@ -258,7 +282,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   addImageContainer: {
-    alignItems: 'center', // Center the button and text horizontally
+    alignItems: 'center',
     marginBottom: 15,
   },
   addImageButton: {
@@ -272,6 +296,18 @@ const styles = StyleSheet.create({
   addImageText: {
     fontSize: 16,
     color: '#333',
+  },
+  imagePreviewContainer: {
+    flexDirection: 'row',
+    marginBottom: 15,
+  },
+  selectedImage: {
+    width: 100,
+    height: 100,
+    marginRight: 10,
+    borderRadius: 8,
+    borderWidth: 2,
+    borderColor: '#ddd',
   },
 });
 

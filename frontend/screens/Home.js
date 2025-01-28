@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, FlatList } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-const Home = ({navigation}) => {
-  const categories = ["Foods", "School Supplies", "Gadgets", "Others"];
-
-  const posts = [
+const Home = ({ route, navigation }) => {
+  const [posts, setPosts] = useState([
     {
       id: '1',
       user: 'Ariana Grande',
@@ -13,10 +11,10 @@ const Home = ({navigation}) => {
       price: 'P50.00',
       title: 'Graham Bars',
       image: 'https://via.placeholder.com/150',
-      likes: 20, // Example like count
-      messages: 5,  // Example message count
+      likes: 20,
+      messages: 5,
+      liked: false, // Track if the post is liked
     },
-
     {
       id: '2',
       user: 'Sabrina Carpenter',
@@ -26,8 +24,31 @@ const Home = ({navigation}) => {
       image: 'https://via.placeholder.com/150',
       likes: 35,
       messages: 3,
+      liked: false, // Track if the post is liked
     },
-  ];
+  ]);
+
+  useEffect(() => {
+    if (route.params?.newPost) {
+      setPosts((prevPosts) => [route.params.newPost, ...prevPosts]);
+    }
+  }, [route.params?.newPost]);
+
+  const categories = ["Foods", "School Supplies", "Gadgets", "Others"];
+
+  const handleLike = (postId) => {
+    setPosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId
+          ? {
+              ...post,
+              liked: !post.liked,
+              likes: post.liked ? post.likes - 1 : post.likes + 1, // Toggle like count
+            }
+          : post
+      )
+    );
+  };
 
   const renderPost = ({ item }) => (
     <View style={styles.postContainer}>
@@ -44,8 +65,15 @@ const Home = ({navigation}) => {
 
         {/* Likes and Messages Section */}
         <View style={styles.iconsContainer}>
-          <TouchableOpacity style={styles.iconButton}>
-            <Icon name="heart-outline" size={24} color="#000" />
+          <TouchableOpacity
+            style={styles.iconButton}
+            onPress={() => handleLike(item.id)} 
+          >
+            <Icon
+              name={item.liked ? 'heart' : 'heart-outline'} 
+              size={24}
+              color={item.liked ? '#F9C2D0' : '#000'} // Change color to pink if liked
+            />
             <Text style={styles.iconText}>{item.likes}</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.iconButton}>
@@ -65,49 +93,49 @@ const Home = ({navigation}) => {
       </View>
 
       {/* Search Bar */}
-  <View style={styles.searchBarContainer}>
-  <TextInput style={styles.searchBar} placeholder="Search" />
-  </View>
+      <View style={styles.searchBarContainer}>
+        <TextInput style={styles.searchBar} placeholder="Search" />
+      </View>
 
       <Image source={require('../assets/7.png')} />
 
       <View style={styles.categoriesContainer}>
-      <View style={styles.categoryRow}>
-        <TouchableOpacity style={styles.categoryButton}>
-        <Image 
-            source={require('../assets/gadgetbutton/foodbutton.png')} // Image for food
-            style={styles.categoryImage}
-          />
-        <Text style={styles.categoryText}>{categories[0]}</Text>
-        </TouchableOpacity>
+        <View style={styles.categoryRow}>
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image
+              source={require('../assets/gadgetbutton/foodbutton.png')} // Image for food
+              style={styles.categoryImage}
+            />
+            <Text style={styles.categoryText}>{categories[0]}</Text>
+          </TouchableOpacity>
 
-        <TouchableOpacity style={styles.categoryButton}>
-          <Image 
-            source={require('../assets/gadgetbutton/suppliesbutton.png')} // Image for School Supplies
-            style={styles.categoryImage}
-          />
-          <Text style={styles.categoryText}>{categories[1]}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image
+              source={require('../assets/gadgetbutton/suppliesbutton.png')} // Image for School Supplies
+              style={styles.categoryImage}
+            />
+            <Text style={styles.categoryText}>{categories[1]}</Text>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.categoryRow}>
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image
+              source={require('../assets/gadgetbutton/gadgetsbutton.png')} // Image for Gadgets
+              style={styles.categoryImage}
+            />
+            <Text style={styles.categoryText}>{categories[2]}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.categoryButton}>
+            <Image
+              source={require('../assets/gadgetbutton/otherbutton.png')} // Image for Others
+              style={styles.categoryImage}
+            />
+            <Text style={styles.categoryText}>{categories[3]}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-
-      <View style={styles.categoryRow}>
-        <TouchableOpacity style={styles.categoryButton}>
-          <Image 
-            source={require('../assets/gadgetbutton/gadgetsbutton.png')} // Image for Gadgets
-            style={styles.categoryImage}
-          />
-          <Text style={styles.categoryText}>{categories[2]}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.categoryButton}>
-          <Image 
-            source={require('../assets/gadgetbutton/otherbutton.png')} // Image for Others
-            style={styles.categoryImage}
-          />
-          <Text style={styles.categoryText}>{categories[3]}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
 
       {/* Posts List */}
       <FlatList
@@ -150,12 +178,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F9C2D0',
   },
-
   searchBarContainer: {
-    alignItems: 'center', 
-    justifyContent: 'center', 
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-
   searchBar: {
     backgroundColor: '#fff',
     borderRadius: 120,
@@ -163,8 +189,8 @@ const styles = StyleSheet.create({
     height: 40,
     width: '90%',
     marginTop: 10,
-    borderWidth: 2, 
-    borderColor: '#000', 
+    borderWidth: 2,
+    borderColor: '#000',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
@@ -178,17 +204,17 @@ const styles = StyleSheet.create({
   categoryButton: {
     backgroundColor: '#fff',
     padding: 10,
-    height:'50',
-    borderRadius:100,
+    height: '50',
+    borderRadius: 100,
     width: '45%',
-    borderWidth: 2, 
-    borderColor: '#000', 
+    borderWidth: 2,
+    borderColor: '#000',
     flexDirection: 'row',
   },
   categoryText: {
     fontSize: 15,
     fontWeight: 'bold',
-    paddingTop: 3,    
+    paddingTop: 3,
     paddingLeft: '5',
     textAlign: 'center',
   },
@@ -201,21 +227,25 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     elevation: 5,
-    height: 300,
-    borderWidth: 2, 
-    borderColor: '#000', 
+    borderWidth: 2,
+    borderColor: '#000',
+    overflow: 'hidden', // Prevent content from overflowing
+    marginBottom: 20, // Add space at the bottom
   },
   postHeader: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
+    alignItems: 'center', // Ensure proper alignment of elements
   },
   postImage: {
     height: 200,
     borderRadius: 10,
+    width: '100%',
   },
   postInfo: {
-    justifyContent: 'flex-start',
     flex: 1,
+    justifyContent: 'flex-start', 
+    marginLeft: 10, 
   },
   userName: {
     fontWeight: 'bold',
@@ -240,6 +270,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-end',
     marginTop: 10,
+    flexWrap: 'wrap', 
   },
   iconButton: {
     flexDirection: 'row',
@@ -263,8 +294,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
-    borderWidth: 2, 
-    borderColor: '#000', 
+    borderWidth: 2,
+    borderColor: '#000',
   },
 });
 
