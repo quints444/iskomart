@@ -4,15 +4,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 const Messaging = ({ navigation }) => {
   const messages = [
+    
     {
       id: '1',
-      user: 'Ariana Grande',
-      lastMessage: 'Can I get a discount?',
-      time: '2:45 PM',
-      avatar: 'https://via.placeholder.com/50',
-    },
-    {
-      id: '2',
       user: 'Sabrina Carpenter',
       lastMessage: 'I received the item. Thank you!',
       time: '1:30 PM',
@@ -21,7 +15,9 @@ const Messaging = ({ navigation }) => {
   ];
 
   const renderMessage = ({ item }) => (
-    <TouchableOpacity style={styles.messageContainer} onPress={() => { /* Navigate to individual chat */ }}>
+    <TouchableOpacity 
+    style={styles.messageContainer} 
+    onPress={() => navigation.navigate('ChatPage', { userName: item.user, avatar: item.avatar })}>
       <Image source={{ uri: item.avatar }} style={styles.avatar} />
       <View style={styles.messageInfo}>
         <Text style={styles.userName}>{item.user}</Text>
